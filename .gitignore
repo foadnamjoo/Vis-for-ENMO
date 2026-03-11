@@ -19,3 +19,6 @@ venv/
 .vscode/
 *.swp
 *.swo
+
+# Large media (use GIF for README)
+*.mov

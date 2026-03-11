@@ -2,6 +2,27 @@
 
 Interactive visualization for ENMO activity, PA-EMA triggers, and device/system monitoring from mobile-health studies.
 
+![Interactive plot demo](assets/demo.gif)
+
+*Screen recording: legend toggles, pan/zoom, control panel, and layer visibility.*
+
+---
+
+## Why This Matters
+
+Research using wearables (Apple Watch, research wristbands, etc.) to study physical activity relies on **activity detection** and **threshold-based triggers** like PA-EMA. Sensors produce dense time-series data (accelerometer → ENMO); rules such as *"ENMO ≥ 0.1006 for ≥70% of a 7‑minute window"* decide when to prompt participants with surveys. Getting these thresholds right is critical: too strict and you miss real activity; too loose and you trigger during sedentary periods, harming data quality and participant burden.
+
+An **interactive visualization** is essential because researchers must:
+
+- **Verify** that PA-EMA triggers fire during real activity bouts (not noise or artifacts).
+- **Tune thresholds** (ENMO level, window length, fraction) by inspecting how they behave over days and participants.
+- **Diagnose failures**—battery drain, wristband disconnects, storage issues—that explain gaps or missed triggers.
+- **Share findings** with non-technical collaborators (clinicians, epidemiologists) who need to explore data without writing code.
+
+Static plots cannot support zooming into suspicious regions, toggling layers, or correlating events. This tool fills that gap for mobile-health studies where validation and interpretability are non-negotiable.
+
+---
+
 ## Project Goal
 This project builds an **interactive visualization tool** to integrate multiple data streams from a mobile-health study:
 
