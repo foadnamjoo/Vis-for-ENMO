@@ -1,10 +1,10 @@
 # Vis-for-ENMO
 
-Interactive visualization for ENMO activity, PA-EMA triggers, and device/system monitoring from mobile-health studies.
+<p align="center">
+  <img src="assets/demo.gif" width="800" alt="Interactive plot demo">
+</p>
 
-![Interactive plot demo](assets/demo.gif)
-
-*Screen recording: legend toggles, pan/zoom, control panel, and layer visibility.*
+Interactive visualization for ENMO activity, PA-EMA triggers, and device/system monitoring from mobile-health studies. *Demo: legend toggles, pan/zoom, control panel, layer visibility.*
 
 ---
 
