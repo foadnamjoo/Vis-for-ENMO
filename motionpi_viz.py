@@ -6,8 +6,6 @@ from pathlib import Path
 from datetime import datetime, timedelta
 import re
 import hashlib  # for stable, order-independent event colors
-#working version
-
 
 
 csv_path         = "data_sample/209C7.csv"        # ENMO CSV
@@ -27,8 +25,8 @@ threshold = 0.1006                       # ENMO threshold
 LOCAL_TZ = "America/Denver"              # show everything in Salt Lake City time
 
 # --- PAEMA PARAMETERS ---
-PAEMA_WINDOW_MINUTES     = 7     # default matches your current 7-minute check
-PAEMA_FRACTION_REQUIRED  = 0.7  # default matches your current 70% requirement
+PAEMA_WINDOW_MINUTES = 7   # 7-minute activity window
+PAEMA_FRACTION_REQUIRED = 0.7  # 70% of window must exceed threshold
 
 # Day/Night schedule (local time)
 DAY_START_HHMM   = (7, 30)   # 7:30 AM
@@ -36,8 +34,8 @@ DAY_END_HHMM     = (21, 30)  # 9:30 PM
 DAY_FILL_RGBA    = "rgba(255,247,188,0.16)"  # soft daylight tint
 NIGHT_FILL_RGBA  = "rgba(40,55,71,0.15)"     # lighter night tint
 
-# >>> Battery: plot ONLY the wristband below <<<
-TARGET_WRISTBAND_MAC_FOR_BATTERY = "C1:15:BF:A7:A8:C7"  # exact MAC you asked for
+# Battery: wristband MAC to plot (from ENMO data; overridden if not found)
+TARGET_WRISTBAND_MAC_FOR_BATTERY = "C1:15:BF:A7:A8:C7"
 
 # Plot performance cap (only affects what we draw, not calculations)
 MAX_PLOTTED_POINTS = 250_000
@@ -240,10 +238,6 @@ end_str   = end_dt.strftime("%Y-%m-%d")
 participant_id_safe = safe_str(participant_id)
 wristband_mac_safe  = safe_str(wristband_mac)
 
-# --- Timestamp for filename ---
-timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-html_out = csv_path.parent / f"enmo_{participant_id_safe}_{wristband_mac_safe}_{timestamp}.html"
-
 # -------- Plot-only downsampling --------
 N = len(g)
 stride = max(1, int(np.ceil(N / MAX_PLOTTED_POINTS))) if N > 0 else 1
@@ -354,8 +348,8 @@ COLORS = {
     "THRESHOLD": "#737373",    # neutral gray
     "PAEMA": "#33a02c",        # Paired green
     "PHONE_BATT": "#6a3d9a",   # Paired purple
-    "WRIST_BATT": "#e7298a",   # Dark2 magenta (changed)
-    "WRIST_STORAGE": "#ff7f00",# Paired orange  <-- comma here
+    "WRIST_BATT": "#e7298a",   # Dark2 magenta
+    "WRIST_STORAGE": "#ff7f00",  # Paired orange
     "ENMO_DEVICE": "#b15928",  # Paired brown — wristband ENMO points
 }
 
@@ -1242,7 +1236,7 @@ POST_SCRIPT = r"""
 
 
 
-# ===================== DEFAULT VISIBILITY PATCH (paste near the end) =====================
+# ===================== DEFAULT VISIBILITY =====================
 # Goal: show only ENMO points by default; everything else starts hidden (legend-click to show).
 def _show_only_enmo_points_by_default(
     fig,
@@ -1275,11 +1269,11 @@ def _show_only_enmo_points_by_default(
 
     # 4) Shapes & annotations:
     #    • Keep Day/Night rectangles visible
-    #    • Hide PAEMA window bands and vertical linesw
+    #    • Hide PAEMA window bands and vertical lines
     if getattr(fig.layout, "shapes", None):
         for s in fig.layout.shapes:
             fc = getattr(s, "fillcolor", "")
-            # FIX: s.line is an object; use attribute access, not .get
+            # s.line is an object; use getattr for attribute access
             lc = getattr(getattr(s, "line", None), "color", None)
 
             is_day   = isinstance(fc, str) and "255,247,188" in fc   # DAY_FILL_RGBA
@@ -1287,20 +1281,12 @@ def _show_only_enmo_points_by_default(
             is_paema_band = isinstance(fc, str) and "46,204,113" in fc  # PAEMA band fill
             # Accept either hex or rgb() forms for the PAEMA line color
             lc_str = (lc or "").lower()
-            is_paema_line = (lc_str == COLORS["PAEMA"].lower()) or ("51,160,44" in lc_str)  # '#33a02c' == rgb(51,160
+            is_paema_line = (lc_str == COLORS["PAEMA"].lower()) or ("51,160,44" in lc_str)
 
 
-# --- apply it ---
 _show_only_enmo_points_by_default(fig)
-# =================== END DEFAULT VISIBILITY PATCH ===================
 
-# (now do your usual)
-# fig.show()
-# fig.write_html("your_file.html", include_plotlyjs="cdn")
-
-
-
-# -- Inject tokens for PAEMA color + day/night RGB and write HTML --
+# Inject tokens for PAEMA color + day/night RGB and write HTML
 POST_SCRIPT = (
     POST_SCRIPT
     .replace("__PAEMA_COLOR__", COLORS["PAEMA"])
@@ -1313,10 +1299,8 @@ fig.write_html(
     include_plotlyjs="cdn",
     full_html=True,
     config=PLOT_CONFIG,
-    post_script=POST_SCRIPT,   # merged compact panel with pan/zoom/screenshot + Y-scale + battery toggles + day/night
+    post_script=POST_SCRIPT,  # interactive control panel
     div_id="enmo_plot"
 )
 
 print(f"Saved: {html_out}")
-
-#working

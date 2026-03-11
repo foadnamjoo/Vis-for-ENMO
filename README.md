@@ -1,4 +1,6 @@
-# MotionPI System Visualization
+# Vis-for-ENMO
+
+Interactive visualization for ENMO activity, PA-EMA triggers, and device/system monitoring from mobile-health studies.
 
 ## Project Goal
 This project builds an **interactive visualization tool** to integrate multiple data streams from a mobile-health study:
@@ -69,16 +71,30 @@ The tool helps research collaborators quickly:
 
 ---
 
-##  Limitations & Future Work
-- Large CSVs may require **chunked pre-filtering**.  
-- Timestamp inconsistencies handled by fallback parsers.  
-- Optional extensions:
-  - anomaly detection,  
-  - drag-and-drop CSV loader.  
+## Limitations & Future Work
+- Large CSVs may require **chunked pre-filtering**.
+- Timestamp inconsistencies handled by fallback parsers.
+- Optional extensions: anomaly detection, drag-and-drop CSV loader.
 
 ---
 
-## Timeline
-- **Now**: working prototype with all layers + control panel.  
-- **Milestone (Oct 21)**: refined prototype + process book update.  
-- **Final**: polished system, screencast, documentation.  
+## Getting Started
+
+**Requirements:** Python 3.8+, pandas, numpy, plotly
+
+```bash
+pip install pandas numpy plotly
+python motionpi_viz.py
+```
+
+This generates `src/index.html`. Open it in a browser to view the interactive visualization.
+
+**Repository structure:**
+- `motionpi_viz.py` — Python script to process data and generate HTML
+- `src/index.html` — Interactive visualization (generated)
+- `data_sample/` — Sample CSV files (ENMO, logs, battery)
+- `*.pdf` — Proposal and process book documents
+
+---
+
+**Author:** Foad Namjoo | [foad.namjoo@utah.edu](mailto:foad.namjoo@utah.edu)
