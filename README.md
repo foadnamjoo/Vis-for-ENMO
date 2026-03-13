@@ -113,7 +113,7 @@ This generates `src/index.html`. Open it in a browser to view the interactive vi
 **Repository structure:**
 - `motionpi_viz.py` — Python script to process data and generate HTML
 - `src/index.html` — Interactive visualization (generated)
-- `data_sample/` — Sample CSV files (ENMO, logs, battery)
+
 - `*.pdf` — Proposal and process book documents
 
 ---
